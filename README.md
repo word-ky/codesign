@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This project implements a joint optimization system for accuracy and communication in Split DNN scenarios, based on the HyperRepVGG architecture. It achieves efficient edge-cloud collaborative inference deployment through progressive pruning and throughput optimization.
+Amid the era of big data and accelerating model scaling, efficient model deployment is increasingly critical for real-time visual inference in Internet of Visual Things (IoVT) systems. Dynamic deep neural networks (DDNNs), which can reconfigure their structures on demand, offer an structure-elastic deployment paradigm. However, existing research on DDNN deployment in mobile computing remains limited in three aspects: (i) it mainly focuses on optimizing task off loading, while rarely achieving joint optimization of task accuracy and inference efficiency; (ii) It lacks a principled account of DDNN structure--efficiency interactions in resource-limited devices, rendering efficiency performance largely black-box and hard to interpret; and (iii) it seldom considers unseen-domain adaptation induced by scene variations in practical mobile computing scenarios. Regarding these gaps, we propose a co-designing approach that optimizes task-oriented cloud-edge DDNN deployment for real-time visual inference and unseen-domain robustness. Extensive experiments across classification/segmentation/detection, heterogeneous backbones and devices, and datasets with domain shifts validate effectiveness and generality, complemented by a coal-mine IoVT surveillance case study. Overall, this work provides theoretical and empirical evidence for reliable DDNN deployment in IoVTs.
 
 ### Key Features
 
