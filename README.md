@@ -12,6 +12,9 @@ Amid the era of big data and accelerating model scaling, efficient model deploym
 - **Throughput Optimization**: LUT-based γ/λ gradient descent optimization to maximize end-to-end throughput
 - **Multi-Domain Support**: Supports 10 different domains with Non-IID data distribution
 
+## The Author Homepage
+https://word-ky.github.io/
+
 ## System Architecture
 
 ```
