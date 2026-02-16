@@ -1,4 +1,4 @@
-# Split DNN Joint Optimization System for Accuracy and Communication
+# Task-Oriented Real-time Visual Inference for IoVTs: A Co-design Framework of Dynamic Deep Neural Networks and Mobile Edge Deployment
 
 ## Project Overview
 
@@ -15,31 +15,30 @@ This project implements a joint optimization system for accuracy and communicati
 ## System Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                  Modular Optimization Pipeline                │
-├─────────────────────────────────────────────────────────────┤
-│  Step 1: LUT Measurement                                      │
-│    ├─ Server: Measure latency of all blocks in 14 γ configs  │
-│    ├─ Client: Measure latency of all blocks in 14 γ configs  │
-│    └─ Output: hardware_lut_complete.json                      │
-├─────────────────────────────────────────────────────────────┤
-│  Step 2: Initial Throughput Optimization                      │
-│    ├─ LUT-based gradient descent optimization                │
-│    ├─ Objective: Maximize throughput (compute + comm)        │
-│    └─ Output: initial_throughput_config.json                  │
-├─────────────────────────────────────────────────────────────┤
-│  Step 3 (Joint): Accuracy-Throughput Joint Optimization│
-│    ├─ Goal-programming based joint optimization (Eq. 7)      │
-│    ├─ Optimize: α (pruning) + γ (branch) + λ (split point)  │
-│    ├─ Roofline enhancement: Intensity matching (Eq. 14)      │
-│    ├─ Accuracy constraint: A(u) ≥ A_ref - ε - ξ_A            │
-│    └─ Output: domain_X_joint.json (α, γ, λ, accuracy)        │
-├─────────────────────────────────────────────────────────────┤
-│  Step 4: Results Visualization                                │
-│    ├─ Generate accuracy-throughput curves                    │
-│    ├─ Compare performance across domains                     │
-│    └─ Output: Visualization charts (PDF/PNG)                 │
-└─────────────────────────────────────────────────────────────┘
+
+
+  Step 1: LUT Measurement                                      
+    ├─ Server: Measure latency of all blocks in 14 γ configs  
+    ├─ Client: Measure latency of all blocks in 14 γ configs  
+    └─ Output: hardware_lut_complete.json                      
+
+  Step 2: Initial Throughput Optimization                      
+    ├─ LUT-based gradient descent optimization                
+    ├─ Objective: Maximize throughput (compute + comm)        
+    └─ Output: initial_throughput_config.json                 
+
+  Step 3 (Joint): Accuracy-Throughput Joint Optimization
+    ├─ Goal-programming based joint optimization (Eq. 7)      
+    ├─ Optimize: α (pruning) + γ (branch) + λ (split point)  
+    ├─ Roofline enhancement: Intensity matching (Eq. 14)      
+    ├─ Accuracy constraint: A(u) ≥ A_ref - ε - ξ_A            
+    └─ Output: domain_X_joint.json (α, γ, λ, accuracy)        
+
+  Step 4: Results Visualization                                
+    ├─ Generate accuracy-throughput curves                    
+    ├─ Compare performance across domains                     
+    └─ Output: Visualization charts (PDF/PNG)                 
+
 ```
 
 ## Preprocessing Steps (Optional)
@@ -135,7 +134,7 @@ python step5_visualize_results.py
 
 For final validation and real hardware testing, requires Server-Client communication:
 
-#### Step 1: Establish SSH Tunnel
+#### Step 1: Establish SSH Tunnel (Details as shown in "SBECL_Technical_Specifications.md")
 
 Execute from Jetson TX2 or relay machine:
 
@@ -179,79 +178,3 @@ python step_3_joint.py --domain_id 0 --mode pseudo  # or --mode real
 python step5_visualize_results.py
 ```
 
-## File Structure
-
-```
-.
-├── config.py                          # Global configuration
-├── requirements.txt                   # Python dependencies
-├── run_pipeline.sh                    # Complete pipeline script
-│
-├── Preprocessing Scripts 
-│   ├── code1_train_and_record_weights.py  # Train hyper-weights
-│   └── code2_calculate_flops_importance.py # Calculate importance rankings
-│
-├── Core Model Files
-│   ├── hyper_repvgg.py               # HyperRepVGG model definition
-│   ├── repvgg.py                     # RepVGG base model
-│   └── se_block.py                   # SE attention module
-│
-├── Pipeline Steps
-│   ├── step1_measure_lut.py          # Step 1: LUT measurement
-│   ├── step2_initial_throughput_opt.py  # Step 2: Initial throughput optimization
-│   ├── step_3_joint.py               # Step 3: Joint optimization 
-│   └── step5_visualize_results.py    # Step 4: Results visualization
-│
-├── Legacy Pipeline 
-│   ├── step3_accuracy_opt.py         # (Legacy) Accuracy optimization
-│   ├── step4_final_throughput_opt.py # (Legacy) Throughput optimization
-│   └── server_main.py                # (Legacy) Server main program
-│
-├── Optimization Modules
-│   ├── progressive_pruning.py        # Progressive pruning logic
-│   ├── throughput_optimizer.py       # Throughput optimizer
-│   ├── throughput_optimizer_limit.py # Constrained throughput optimizer
-│   ├── gamma_configurator.py         # γ configurator
-│   └── gamma_mask_builder.py         # γ mask builder
-│
-├── Network Communication
-│   ├── network_utils.py              # Network communication utilities
-│   ├── split_trainer.py              # Server-Client collaborative training
-│   ├── server_main.py                # Server main program (legacy)
-│   ├── server_main_throughput.py     # Server throughput optimization version
-│   └── client_worker.py              # Client Worker program
-│
-├── Data Processing
-│   ├── domain_dataset.py             # Domain dataset loader
-│   ├── domain_transforms.py          # Data augmentation
-│   └── create_noniid_partition.py    # Non-IID data partitioning
-│
-├── Performance Measurement
-│   ├── lut_manager.py                # LUT measurement and management
-│   └── roofline_measure.py           # Roofline model measurement
-│
-├── Pre-computed Data (Generated by Code 1 and Code 2)
-│   ├── task1_trained_weights_RepVGG-B3/
-│   │   ├── trained_hyper_weights.json    # Pre-trained hyper-weights (Code 1 output)
-│   │   ├── training_results.json         # Training results (Code 1 output)
-│   │   └── hyper_weights_heatmap.png     # Weight heatmap (Code 1 output)
-│   │
-│   ├── task2_importance_rankings_RepVGG-B3/
-│   │   ├── importance_rankings.json      # Branch importance rankings (Code 2 output)
-│   │   ├── importance_scores.json        # Importance scores (Code 2 output)
-│   │   ├── branch_flops.json             # Branch FLOPs statistics (Code 2 output)
-│   │   └── importance_heatmap.png        # Importance heatmap (Code 2 output)
-│   │
-│   └── results/
-│       ├── hardware_lut_complete.json    # Complete hardware LUT
-│       └── initial_throughput_config.json # Initial throughput config
-│
-└── Output Results (Generated after execution)
-    ├── joint_optimization/               # Joint optimization results
-    │   ├── domain_0_joint.json
-    │   ├── domain_1_joint.json
-    │   └── ...
-    └── visualization/                    # Visualization outputs
-        ├── accuracy_throughput_curve.pdf
-        └── domain_comparison.png
-```
